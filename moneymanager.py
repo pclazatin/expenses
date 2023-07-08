@@ -23,7 +23,10 @@ import datetime as dt
 TABLES = {
     'events': []
 }
+DATE_FORMAT = '%d-%m-%Y'
+CSV_ENCODING = 'iso-8859-1'
 CSV_FILENAME = '2023.csv'
+XLSX_FILENAME = '2023-01-01 ~ 12-31.xlsx'
 REPORTING_YEAR = 2020
 REPORTING_MONTH = 12
 
@@ -58,8 +61,13 @@ def update_config():
 # ------------------
 # sub-functions
 # ------------------
-def load_transactions():
+def load_transactions(events=None, event_format='xlsx'):
     global TABLES
+    if events is None:
+        if event_format == 'xlsx':
+            events = pd.read_excel(XLSX_FILENAME)
+        elif event_format == 'csv':
+            events = pd.read_csv(CSV_FILENAME, encoding=CSV_ENCODING)
     events = pd.read_csv(CSV_FILENAME)
     subfields = ['Period',
                  'Category',
