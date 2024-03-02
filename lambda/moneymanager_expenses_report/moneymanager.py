@@ -25,8 +25,8 @@ TABLES = {
 }
 DATE_FORMAT = '%d-%m-%Y'
 CSV_ENCODING = 'iso-8859-1'
-CSV_FILENAME = '2023.csv'
-XLSX_FILENAME = '2023-01-01 ~ 12-31.xlsx'
+CSV_FILENAME = '../../2024.csv'
+XLSX_FILENAME = '../../2024-01-01 ~ 12-31.xlsx'
 REPORTING_YEAR = 2020
 REPORTING_MONTH = 12
 
@@ -78,7 +78,7 @@ def load_transactions(events=None, event_format='xlsx'):
     events['day'] = events['start_date'].apply(lambda x: x.day)
     events['month'] = events['start_date'].apply(lambda x: x.month)
     events['year'] = events['start_date'].apply(lambda x: x.year)
-    events = events[events['Income/Expense'] == 'Expense'].copy()
+    events = events[events['Income/Expense'] == 'Exp.'].copy()
     events = events[events['year'] <= REPORTING_YEAR].copy()
     events = events[events['month'] <= REPORTING_MONTH].copy()
     events_pvt = pd.pivot_table(events, index='Category', columns='month',
