@@ -11,11 +11,9 @@ and columns for each month in the year
 # ------------------
 # import dependencies
 # ------------------
-import sys
 from sqlgsheet import database as db
 import pandas as pd
 import datetime as dt
-
 
 # -------------------
 # variables
@@ -25,8 +23,8 @@ TABLES = {
 }
 DATE_FORMAT = '%d-%m-%Y'
 CSV_ENCODING = 'iso-8859-1'
-CSV_FILENAME = '../../2024.csv'
-XLSX_FILENAME = '../../2024-01-01 ~ 12-31.xlsx'
+CSV_FILENAME = '2024.csv'
+XLSX_FILENAME = '2024-01-01 ~ 12-31.xlsx'
 REPORTING_YEAR = 2020
 REPORTING_MONTH = 12
 
@@ -34,9 +32,9 @@ REPORTING_MONTH = 12
 # -------------------
 # main
 # -------------------
-def update():
+def update(txns=None):
     load()
-    load_transactions()
+    load_transactions(events=txns)
     post_to_gsheet()
     print('report updated!')
 
@@ -68,13 +66,12 @@ def load_transactions(events=None, event_format='xlsx'):
             events = pd.read_excel(XLSX_FILENAME)
         elif event_format == 'csv':
             events = pd.read_csv(CSV_FILENAME, encoding=CSV_ENCODING)
-    events = pd.read_csv(CSV_FILENAME)
     subfields = ['Period',
                  'Category',
                  'Subcategory',
                  'Amount']
     events['start_date'] = events['Period'].apply(
-        lambda x: dt.datetime.strptime(x, '%d/%m/%Y').date())
+        lambda x: x.date())
     events['day'] = events['start_date'].apply(lambda x: x.day)
     events['month'] = events['start_date'].apply(lambda x: x.month)
     events['year'] = events['start_date'].apply(lambda x: x.year)
@@ -112,23 +109,3 @@ def post_to_gsheet():
     db.post_to_gsheet(subcategory_report.reset_index()[['Category', 'Subcategory']],
                       'expenses', 'subcategories',
                       input_option='USER_ENTERED')
-
-
-# -------------------
-# Command Line Interface
-# -------------------
-def autorun():
-    if len(sys.argv) > 1:
-        process_name = sys.argv[1]
-        if process_name == 'pink_floyd':
-            print('dont take a slice of my pie')
-    else:
-        update()
-
-
-if __name__ == "__main__":
-    autorun()
-
-# --------------------
-# Reference Code
-# --------------------

@@ -52,8 +52,8 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref DynamoDBTableName
       Tags:
-        role: LifeHacks
-        project: pcl-expenses
+        role: Create
+        project: Track
       Events:
         S3Bucket:
           Type: S3
