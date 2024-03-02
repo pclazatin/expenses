@@ -1,7 +1,7 @@
 {
     "StackName": "lambda-moneymanager-expenses-report",
     "AccountId": "",
-    "StagingBucket": "moneymanager",
+    "StagingBucket": "moneymanager-007",
     "DataPrefix": "expense_txns",
     "DynamoDBTableName": "expense_txn",
     "LayerArns": [],
