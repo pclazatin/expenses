@@ -3,13 +3,13 @@
         "name": "AWSSDKPandas-Python39",
         "AccountId": "336392948345",
         "region": "ap-southeast-1",
-        "version": "8"
+        "version": "12"
     },
     {
-        "name": "nosqlgsheet-dependencies",
+        "name": "dependencies",
         "AccountId": "",
         "region": "",
-        "version": "1"
+        "version": "9"
     },
     {
         "name": "user_data_expenses",
