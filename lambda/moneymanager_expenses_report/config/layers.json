@@ -6,10 +6,10 @@
         "version": "12"
     },
     {
-        "name": "dependencies",
+        "name": "sqlgsheet",
         "AccountId": "",
         "region": "",
-        "version": "9"
+        "version": "1"
     },
     {
         "name": "user_data_expenses",
