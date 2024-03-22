@@ -4,7 +4,7 @@ import boto3
 import moneymanager as mm
 import dynamodb
 
-
+#test
 ENV_VARIABLES = [
     'S3_BUCKET',
     'S3_PREFIX',
@@ -13,7 +13,7 @@ ENV_VARIABLES = [
 ]
 ENV = 'prod'
 DATA_FILE = 'txns.xlsx'
-DB_TABLE_NAME = 'pcl_expense_txns'
+DB_TABLE_NAME = 'expense_txns'
 S3_BUCKET = ''
 S3_PREFIX = ''
 TXN_DATA_KEY = ''
