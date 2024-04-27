@@ -87,11 +87,17 @@ def transactions_format(txns_raw: pd.DataFrame):
 def reports_update(txns: pd.DataFrame):
     global REPORTS
     if len(txns) > 0:
+        # 01 main category report
         txns_pvt = pd.pivot_table(txns, index=FIELDS['category'], columns='month',
             values=FIELDS['amount'], aggfunc='sum')
         txns_pvt.fillna(0, inplace=True)
         REPORTS['main_category_report'] = txns_pvt
 
+        #02 subcategory report
+        sub_cat_pvt = pd.pivot_table(txns, index=['Category', 'Subcategory'], columns='month',
+                                 values='SGD', aggfunc='sum')
+        sub_cat_pvt.fillna(0, inplace=True)
+        REPORTS['subcategory_report'] = sub_cat_pvt
 
 def post_to_gsheet():
     # 01 main category
@@ -102,7 +108,15 @@ def post_to_gsheet():
                       'expenses', 'main_categories',
                       input_option='USER_ENTERED')
 
-
+    #02 subcategories
+    subcategory_report = REPORTS['subcategory_report']
+    #data fields
+    db.post_to_gsheet(subcategory_report, 'expenses', 'subcategory_report_data',
+                      input_option='USER_ENTERED')
+    #category field
+    db.post_to_gsheet(subcategory_report.reset_index()[['Category', 'Subcategory']],
+                      'expenses', 'subcategory_report_category',
+                      input_option='USER_ENTERED')
 def db_update(rows: pd.DataFrame, has_duplicates=True):
     """ updates the database with new rows
     """
