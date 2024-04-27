@@ -25,7 +25,8 @@ FIELDS = {
     'amount': 'SGD',
     'start_date': 'Period',
     'txn_type': 'Income/Expense',
-    'category': 'Category'
+    'category': 'Category',
+    'subcategory': 'Subcategory'
 }
 DROP_FIELDS = [
     'Accounts.1'
@@ -44,11 +45,10 @@ def update(txns_raw: pd.DataFrame):
     if len(txns_raw) > 0:
         txns = transactions_format(txns_raw)
         new_txns = db_update(txns)
-        if new_txns:
-            reports_update(txns)
-            post_to_gsheet()
-        else:
-            message = 'no new transactions to update.'
+        reports_update(txns)
+        post_to_gsheet()
+        if not new_txns:
+            message = 'report refreshed with no new transactions'
     else:
         message = 'no new transactions to update.'
 
@@ -87,11 +87,17 @@ def transactions_format(txns_raw: pd.DataFrame):
 def reports_update(txns: pd.DataFrame):
     global REPORTS
     if len(txns) > 0:
+        # 01 main category report
         txns_pvt = pd.pivot_table(txns, index=FIELDS['category'], columns='month',
             values=FIELDS['amount'], aggfunc='sum')
         txns_pvt.fillna(0, inplace=True)
         REPORTS['main_category_report'] = txns_pvt
 
+        #02 subcategory report
+        sub_cat_pvt = pd.pivot_table(txns, index=[FIELDS['category'], FIELDS['subcategory']], columns='month',
+                                 values='SGD', aggfunc='sum')
+        sub_cat_pvt.fillna(0, inplace=True)
+        REPORTS['subcategory_report'] = sub_cat_pvt
 
 def post_to_gsheet():
     # 01 main category
@@ -102,7 +108,15 @@ def post_to_gsheet():
                       'expenses', 'main_categories',
                       input_option='USER_ENTERED')
 
-
+    #02 subcategories
+    subcategory_report = REPORTS['subcategory_report']
+    #data fields
+    db.post_to_gsheet(subcategory_report, 'expenses', 'subcategory_report',
+                      input_option='USER_ENTERED')
+    #category field
+    db.post_to_gsheet(subcategory_report.reset_index()[[FIELDS['category'], FIELDS['subcategory']]],
+                      'expenses', 'subcategories',
+                      input_option='USER_ENTERED')
 def db_update(rows: pd.DataFrame, has_duplicates=True):
     """ updates the database with new rows
     """
