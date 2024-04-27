@@ -111,11 +111,11 @@ def post_to_gsheet():
     #02 subcategories
     subcategory_report = REPORTS['subcategory_report']
     #data fields
-    db.post_to_gsheet(subcategory_report, 'expenses', 'subcategory_report_data',
+    db.post_to_gsheet(subcategory_report, 'expenses', 'subcategory_report',
                       input_option='USER_ENTERED')
     #category field
     db.post_to_gsheet(subcategory_report.reset_index()[[FIELDS['category'], FIELDS['subcategory']]],
-                      'expenses', 'subcategory_report_category',
+                      'expenses', 'subcategories',
                       input_option='USER_ENTERED')
 def db_update(rows: pd.DataFrame, has_duplicates=True):
     """ updates the database with new rows
