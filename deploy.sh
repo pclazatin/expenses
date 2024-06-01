@@ -50,6 +50,5 @@ if [ $? == 0 ]; then
     --function-name $DEPLOY_LAMBDA \
     --payload '{"message": "hello world"}'
     --cli-binary-format raw-in-base64-out \
-    #--payload $invoke_payload \
     /dev/stdout
 fi
