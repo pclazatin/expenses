@@ -49,7 +49,7 @@ if [ $? == 0 ]; then
   aws lambda invoke \
     --function-name $DEPLOY_LAMBDA \
     --payload '{"message": "hello world"}'
-    #--payload $invoke_payload \
     --cli-binary-format raw-in-base64-out \
+    #--payload $invoke_payload \
     /dev/stdout
 fi
